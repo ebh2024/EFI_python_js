@@ -1,0 +1,25 @@
+# version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      SQLALCHEMY_DATABASE_URI: mysql+pymysql://root:root@mysql_database:3306/database_EFI
+      SECRET_KEY: AJSDAJSHDKSFJKAS
+    volumes:
+      - .:/app
+    depends_on:
+      - mysql_database
+
+  mysql_database:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: database_EFI
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
