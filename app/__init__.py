@@ -7,7 +7,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app(config_name):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
     app.config.from_object(config[config_name])
     
     db.init_app(app)
@@ -17,3 +17,4 @@ def create_app(config_name):
     register_blueprints(app)
     
     return app
+

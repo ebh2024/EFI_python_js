@@ -1,17 +1,24 @@
-from flask import Blueprint
+import os
+from flask import Blueprint, send_from_directory, current_app
 
-# Importar todos los Blueprints de las vistas
-from .equipo import equipo_bp
-#from .modelo import modelo_bp
-
-# Crear un Blueprint para la raíz
 main_bp = Blueprint('main', __name__)
 
-@main_bp.route('/')
-def index():
-    return "Hello, World!"
+@main_bp.route('/test')
+def test():
+    return "Test endpoint is working!"
+
+@main_bp.route('/', defaults={'path': ''})
+@main_bp.route('/<path:path>')
+def serve(path):
+    if path and os.path.exists(current_app.static_folder + '/' + path):
+        return send_from_directory(current_app.static_folder, path)
+    else:
+        return send_from_directory(current_app.static_folder, 'index.html')
 
 def register_blueprints(app):
+    from .equipo import equipo_bp
+    from .modelo import modelo_bp
+
     app.register_blueprint(equipo_bp)
-    #app.register_blueprint(modelo_bp)
-    app.register_blueprint(main_bp)  # Registrar el Blueprint de la raíz
+    app.register_blueprint(modelo_bp)
+    app.register_blueprint(main_bp)
